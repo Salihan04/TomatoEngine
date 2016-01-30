@@ -1,0 +1,17 @@
+{
+  "name": "TomatoCrawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Soe Lynn",
+  "license": "ISC",
+  "dependencies": {
+    "lowdb": "^0.12.2",
+    "node-uuid": "^1.4.7",
+    "x-ray": "^2.0.3"
+  }
+}
