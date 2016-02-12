@@ -27,6 +27,20 @@ html {
 
 }
 
+.layout__review-app {
+  .hits {
+    flex-flow: column wrap;
+
+    &-hit {
+      flex-flow: row nowrap;
+      max-width: 100%;
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  }
+}
+
 .my-logo {
   color:white;
   flex:0 0 250px;
