@@ -69,7 +69,7 @@ export class MovieApp extends React.Component<any, any> {
             <div className="layout">
               <div className="layout__top-bar top-bar">
                 <div className="top-bar__content">
-                  <div className="my-logo">Searchkit Acme co</div>
+                  <div className="my-logo">Tomato Movies</div>
                   <SearchBox translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["movie.title^1"]}/>
                 </div>
               </div>
