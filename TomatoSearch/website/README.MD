@@ -21,3 +21,7 @@ Deployment is done using [Pod](https://github.com/yyx990803/pod).
 The following instructions add a new git remote named `deploy` and push this subdirectory to the server which runs the deploy script in `.podhook`:
 - `git remote add deploy ssh://root@tomato.ga/root/tomato/repos/tomato.git`
 - From root directory: `git subtree push --prefix TomatoSearch/website deploy master`
+
+The status of the deployment can be viewed at `http://tomato.ga:19999/` using the following credentials:
+- Username: `tomato`
+- Password: `soelynnlovestomatoes`
