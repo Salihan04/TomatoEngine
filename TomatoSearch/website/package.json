@@ -2,7 +2,7 @@
   "name": "searchkit-demo",
   "version": "1.0.0",
   "description": "searchkit poc",
-  "main": "index.js",
+  "main": "start.js",
   "scripts": {
     "start": "node start.js",
     "test": "echo tests tbd",
