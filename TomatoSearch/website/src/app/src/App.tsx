@@ -35,18 +35,16 @@ const MovieHitsItem = (props)=> {
         <div className="col-3">
           <a href={url} target="_blank">
             <img data-qa="poster" className={bemBlocks.item("poster") } src={result._source.review.metadata.poster} width="150" height="220"/>
-        </a>
+          </a>
           <div data-qa="movie" className={bemBlocks.item("movie") } dangerouslySetInnerHTML={{ __html: _.get(result, "highlight.review.metadata.title", false) || result._source.review.metadata.title }}>
+          </div>
         </div>
-      </div>
         <div className="col-9">
           <a href={url} target="_blank">
             <div data-qa="review" className={bemBlocks.item("review")} dangerouslySetInnerHTML={{__html:_.get(result,"highlight.review.review",false) || result._source.review.review}}>
             </div>
           </a>
         </div>
-
-        
       </div>
     </div>
   )
