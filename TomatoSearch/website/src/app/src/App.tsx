@@ -30,15 +30,23 @@ const MovieHitsItem = (props)=> {
   const {bemBlocks, result} = props
   let url = "http://www.rottentomatoes.com/m/" + result._source.review.movie
   return (
-    <div className={bemBlocks.item().mix(bemBlocks.container("item"))} data-qa="hit">
-      <a href={url} target="_blank">
-        <div data-qa="review" className={bemBlocks.item("review")} dangerouslySetInnerHTML={{__html:_.get(result,"highlight.review.review",false) || result._source.review.review}}>
+    <div className="item-block">
+      <div className={bemBlocks.item().mix(bemBlocks.container("item")) } data-qa="hit">
+        <div className="col-3">
+          <a href={url} target="_blank">
+            <img data-qa="poster" className={bemBlocks.item("poster") } src={result._source.review.metadata.poster} width="150" height="220"/>
+        </a>
+          <div data-qa="movie" className={bemBlocks.item("movie") } dangerouslySetInnerHTML={{ __html: _.get(result, "highlight.review.metadata.title", false) || result._source.review.metadata.title }}>
         </div>
-      </a>
-      <a href={url} target="_blank">
-        <img data-qa="poster" className={bemBlocks.item("poster")} src={result._source.review.metadata.poster} width="150" height="220"/>
-      </a>
-      <div data-qa="movie" className={bemBlocks.item("movie")} dangerouslySetInnerHTML={{__html:_.get(result,"highlight.review.metadata.title",false) || result._source.review.metadata.title}}>
+      </div>
+        <div className="col-9">
+          <a href={url} target="_blank">
+            <div data-qa="review" className={bemBlocks.item("review")} dangerouslySetInnerHTML={{__html:_.get(result,"highlight.review.review",false) || result._source.review.review}}>
+            </div>
+          </a>
+        </div>
+
+        
       </div>
     </div>
   )
