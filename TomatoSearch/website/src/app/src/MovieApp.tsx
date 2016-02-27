@@ -24,6 +24,7 @@ import {
 } from "searchkit";
 
 import "searchkit/release/theme.css";
+import "./../styles/customisations.scss";
 
 const MovieHitsItem = (props)=> {
   const {bemBlocks, result} = props
@@ -67,9 +68,9 @@ export class MovieApp extends React.Component<any, any> {
         <SearchkitProvider searchkit={this.searchkit}>
           <div>
             <div className="layout">
-              <div className="layout__top-bar top-bar">
+              <div className="tomato-top-bar layout__top-bar top-bar">
                 <div className="top-bar__content">
-                  <div className="my-logo">Tomato Movies</div>
+                  <div className="tomato-logo my-logo">Tomato Movies</div>
                   <SearchBox translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["movie.title^1"]}/>
                 </div>
               </div>
@@ -83,6 +84,8 @@ export class MovieApp extends React.Component<any, any> {
                 </div>
 
                 <div className="layout__results results-list">
+
+                  <div className="label">Movies</div>
 
                   <div className="results-list__action-bar action-bar">
 

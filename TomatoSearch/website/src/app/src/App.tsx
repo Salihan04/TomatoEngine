@@ -23,8 +23,8 @@ import {
   TermQuery
 } from "searchkit";
 
-import "./../styles/customisations.scss";
 import "searchkit/release/theme.css";
+import "./../styles/customisations.scss";
 
 const MovieHitsItem = (props)=> {
   const {bemBlocks, result} = props
@@ -77,9 +77,9 @@ export class App extends React.Component<any, any> {
         <SearchkitProvider searchkit={this.searchkit}>
           <div>
             <div className="layout layout__review-app">
-              <div className="layout__top-bar top-bar">
+              <div className="tomato-top-bar layout__top-bar top-bar">
                 <div className="top-bar__content">
-                  <div className="my-logo">Tomato Reviews</div>
+                  <div className="tomato-logo my-logo">Tomato Reviews</div>
                   <SearchBox translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["review.review^1","review.title^2"]}/>
                 </div>
               </div>
@@ -93,6 +93,8 @@ export class App extends React.Component<any, any> {
                 </div>
 
                 <div className="layout__results results-list">
+
+                  <div className="label">Reviews</div>
 
                   <div className="results-list__action-bar action-bar">
 
