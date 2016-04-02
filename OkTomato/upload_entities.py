@@ -4,7 +4,7 @@ import random
 import math
 from urllib import quote_plus
 
-data_files = ['actor']
+data_files = ['actor', 'genre', 'movie', 'character']
 ACCESS_TOKEN = 'W7SPBNN4HSU5G4PQJQHSTYM2TDEQ7OZZ'
 FULL_URL = 'https://api.wit.ai/entities?v=20141022'
 UPDATE_URL = 'https://api.wit.ai/entities/%s/values/%s/expressions?v=20141022'
@@ -32,9 +32,6 @@ def make_request(entity_type):
         data = json.load(f)
 
     values = [{'value': v, 'expressions': [v, v.lower()]} for v in data]
-    for v in data:
-        for _ in xrange(3):
-            exprs.append({'body': generate_expr(entity_type, v)})
 
     payload = {
         'id': entity_type,
