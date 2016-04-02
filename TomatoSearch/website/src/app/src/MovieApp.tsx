@@ -26,6 +26,9 @@ import {
 import "searchkit/release/theme.css";
 import "./../styles/customisations.scss";
 
+// !!!
+import {SearchBox2} from './SearchBox2'
+
 const MovieHitsItem = (props)=> {
   const {bemBlocks, result} = props
   // let url = "http://www.rottentomatoes.com/m/" + result._source.movie.url_id
@@ -46,6 +49,7 @@ export class MovieApp extends React.Component<any, any> {
   searchkit:SearchkitManager
 
   constructor() {
+    super(); //@ZHANQI: Added to avoid ERROR 
     const host = "https://tomato.ga:9999"
     this.searchkit = new SearchkitManager(host, {
       basicAuth: "elasticsearch:soelynnlovestomatoes"
@@ -58,7 +62,7 @@ export class MovieApp extends React.Component<any, any> {
     this.searchkit.translateFunction = (key)=> {
       return {"pagination.next":"Next Page"}[key]
     }
-    super()
+    // super()
   }
 
   render(){
@@ -71,7 +75,7 @@ export class MovieApp extends React.Component<any, any> {
               <div className="tomato-top-bar layout__top-bar top-bar">
                 <div className="top-bar__content">
                   <div className="tomato-logo my-logo">Tomato Movies</div>
-                  <SearchBox translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["movie.title^1"]}/>
+                  <SearchBox2 translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["movie.title^1"]}/>
                 </div>
               </div>
 

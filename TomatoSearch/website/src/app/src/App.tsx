@@ -55,6 +55,7 @@ export class App extends React.Component<any, any> {
   searchkit:SearchkitManager
 
   constructor() {
+    super(); //@ZHANQI: Added to avoid ERROR 
     const host = "https://tomato.ga:9999"
     this.searchkit = new SearchkitManager(host, {
       basicAuth: "elasticsearch:soelynnlovestomatoes"
@@ -67,7 +68,7 @@ export class App extends React.Component<any, any> {
     this.searchkit.translateFunction = (key)=> {
       return {"pagination.next":"Next Page"}[key]
     }
-    super()
+    // super()
   }
 
   render(){
