@@ -27,11 +27,12 @@ html {
 
 }
 
-.layout__review-app {
-  .hits {
+.sk-layout__review-app {
+  .sk-hits {
     flex-flow: column wrap;
 
     &-hit {
+      display: flex;
       flex-flow: row nowrap;
       max-width: 100%;
       width: 100%;
@@ -97,7 +98,7 @@ html {
 }
 
 .tomato-logo {
-  color: #00ff00;
+  // color: #00ff00;
   font-weight: bold;
 }
 

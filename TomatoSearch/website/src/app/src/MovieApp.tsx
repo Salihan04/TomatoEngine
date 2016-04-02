@@ -26,8 +26,8 @@ import {
 import "searchkit/release/theme.css";
 import "./../styles/customisations.scss";
 
-// !!!
-import {SearchBox2} from './SearchBox2'
+import {SearchBox2} from './components/SearchBox2'
+import {TimeRangeFilter} from './components/TimeRangeFilter'
 
 const MovieHitsItem = (props)=> {
   const {bemBlocks, result} = props
@@ -71,29 +71,32 @@ export class MovieApp extends React.Component<any, any> {
       <div>
         <SearchkitProvider searchkit={this.searchkit}>
           <div>
-            <div className="layout">
-              <div className="tomato-top-bar layout__top-bar top-bar">
-                <div className="top-bar__content">
+            <div className="sk-layout">
+              <div className="tomato-top-bar sk-layout__top-bar sk-top-bar">
+                <div className="sk-top-bar__content">
                   <div className="tomato-logo my-logo">Tomato Movies</div>
-                  <SearchBox2 translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["movie.title^1"]}/>
+                  <SearchBox2 translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={false} queryFields={["movie.title^1"]}/>
                 </div>
               </div>
 
-              <div className="layout__body">
-          			<div className="layout__filters">
+              <div className="sk-layout__body">
+          			<div className="sk-layout__filters">
           				<ResetFilters />
+                  <TimeRangeFilter format={"YYYY-MM-DD"} min={"2013-11-01"} max={"2016-06-30"} interval={'1M'} field="movie.release_dates.theater" id="release_dates" title="Released dates" showHistogram={true}/>
                   <RangeFilter min={0} max={100} field="movie.ratings.critics_score" id="rating" title="Metascore" showHistogram={true}/>
                   <RefinementListFilter translations={{"facets.view_more":"View more movies"}} id="movies" title="Movies" field="movie.title.raw" operator="OR" size={10}/>
                   <RefinementListFilter translations={{"facets.view_more":"View more genres"}} id="genres" title="Genres" field="movie.imdb.Genre" operator="AND" size={10}/>
+                  <RefinementListFilter translations={{"facets.view_more":"View more actors"}} id="actors" title="Actors" field="movie.abridged_cast.name" operator="AND" size={10}/>
+                  <RefinementListFilter translations={{"facets.view_more":"View more characters"}} id="characters" title="Characters" field="movie.abridged_cast.characters" operator="AND" size={10}/>
                 </div>
 
-                <div className="layout__results results-list">
+                <div className="sk-layout__results sk-results-list">
 
                   <div className="label">Movies</div>
 
-                  <div className="results-list__action-bar action-bar">
+                  <div className="sk-results-list__action-bar sk-action-bar">
 
-                    <div className="action-bar__info">
+                    <div className="sk-action-bar__info">
               				<HitsStats translations={{
                         "hitstats.results_found":"{hitCount} results found"
                       }}/>
@@ -104,13 +107,13 @@ export class MovieApp extends React.Component<any, any> {
               				]}/>
               			</div>
 
-                    <div className="action-bar__filters">
+                    <div className="sk-action-bar__filters">
                       <SelectedFilters/>
                       <ResetFilters/>
                     </div>
 
                   </div>
-                  <Hits hitsPerPage={15} highlightFields={["movie.title"]}
+                  <Hits mod="sk-hits-grid" hitsPerPage={15} highlightFields={["movie.title"]}
                   itemComponent={MovieHitsItem}/>
                   <NoHits suggestionsField={"movie.title"}/>
                   <InitialLoader/>
