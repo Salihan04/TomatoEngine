@@ -1,4 +1,5 @@
 from common import load_non_preprocessed_data, load_preprocessed_data
+from classifiers import ClassifierOvOFeaturesReduction
 from gensim.models import Doc2Vec
 from gensim.models.doc2vec import LabeledSentence
 from sklearn.cross_validation import StratifiedKFold
@@ -9,13 +10,19 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
 from sklearn.externals import joblib
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 from sklearn.linear_model import Perceptron
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 from sklearn.multiclass import fit_ovo
 from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import BernoulliNB
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import make_pipeline, make_union
+from sklearn.pipeline import Pipeline
+from sklearn.grid_search import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -39,13 +46,14 @@ valid_classifiers = {
     "sgd": SGDClassifier,
     "svc": SVC,
     "voting": VotingClassifier,
+    "BernoulliNB": BernoulliNB,
 }
 
 def main(classifier_name,
          classifier_args=None,
          ngram=2,
          folds=3,
-         preprocessed=True):
+         preprocessed=False):
   if preprocessed:
     X, y = load_preprocessed_data()
   else:
@@ -57,32 +65,35 @@ def main(classifier_name,
   ###############################
   # Training and testing models #
   ###############################
-  avg_accuracy = 0
-  for train_index, test_index in skf:
-    X_train, X_test = X[train_index], X[test_index]
-    y_train, y_test = y[train_index], y[test_index]
+ 
+  # vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, analyzer='word', 
+  #        stop_words='english', ngram_range=(1, ngram))
+  vectorizer = CountVectorizer(ngram_range=(1, ngram))
 
-    count_vect = TfidfVectorizer(sublinear_tf=True, max_df=0.5, analyzer='word', 
-           stop_words='english', ngram_range=(1, ngram))
-    X_train = count_vect.fit_transform(X_train)
+  print()
+  print('training classifier')
+  if classifier_args is None:
+    classifier_args = {}
+  classifier = valid_classifiers[classifier_name](**classifier_args)
 
-    print('training classifier')
-    if classifier_args is None:
-      classifier_args = {}
-    classifier = valid_classifiers[classifier_name](**classifier_args)
-    classifier.fit(X_train, y_train)
+  params = {
+            "tfidf__ngram_range": [(1, 2)],
+            "Classifier__C": [.01, .1, 1, 10, 100],
+            "Classifier__kernel": ['rbf', 'linear', 'poly', 'sigmoid'],
+          }
+  ml_pipeline = Pipeline([
+                    ('tfidf', TfidfVectorizer(sublinear_tf=True)),
+                    # ('Vectorization', CountVectorizer(binary='true')),
+                    # ('Feature Refinement', TfidfTransformer(use_idf=False)),
+                    # ('Feature Selection', SelectKBest(chi2, 100)),
+                    # ('Feature Reduction', ClassifierOvOFeaturesReduction()),
+                    ('Classifier', classifier),
+                    ])
 
-    print('predicting test data')
-    X_test = count_vect.transform(X_test)
-    y_pred = classifier.predict(X_test)
-
-    accuracy = accuracy_score(y_test, y_pred)
-    print("accuracy: %f" % accuracy)
-
-    avg_accuracy += accuracy;
-
-  avg_accuracy = avg_accuracy / folds
-  print('Avg accuracy: %f' % (avg_accuracy))
+  gs = GridSearchCV(ml_pipeline, params, cv = folds, verbose=2, n_jobs=-1)
+  gs.fit(X, y)
+  print(gs.best_params_)
+  print(gs.best_score_)
 
 if __name__ == '__main__':
   # classifier_name = "decisiontree"
@@ -91,13 +102,16 @@ if __name__ == '__main__':
   # classifier_name = "knn"
   # classifier_args = {}
 
-  classifier_name = "randomforest"
-  classifier_args = {"n_jobs": -1}
+  # classifier_name = "extratree"
+  # classifier_args = {"n_jobs": -1}
 
   # classifier_name = "sgd"
   # classifier_args = {}
 
-  # classifier_name = "svc"
+  classifier_name = "svc"
+  classifier_args = {} #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
+
+  # classifier_name = "BernoulliNB"
   # classifier_args = {}
 
   if 'classifier_name' not in locals() or 'classifier_args' not in locals():
@@ -110,4 +124,4 @@ if __name__ == '__main__':
   print(classifier_args)
   print('=======================================')
 
-  main(classifier_name, classifier_args, preprocessed = False, ngram=5)
+  main(classifier_name, classifier_args, preprocessed = False, ngram=2)
