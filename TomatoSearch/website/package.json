@@ -2,7 +2,7 @@
   "name": "searchkit-demo",
   "version": "1.0.0",
   "description": "searchkit poc",
-  "main": "index.js",
+  "main": "start.js",
   "scripts": {
     "start": "node start.js",
     "test": "echo tests tbd",
@@ -23,8 +23,10 @@
     "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
     "history": "^1.17.0",
-    "lodash": "^3.10.1",
+    "jsonp": "^0.2.0",
+    "lodash": "^4.5.0",
     "method-override": "^2.3.5",
+    "moment": "^2.12.0",
     "normalize.css": "^3.0.3",
     "parsimmon": "^0.7.0",
     "qs": "^4.0.0",
@@ -33,7 +35,7 @@
     "react-dom": "^0.14.0",
     "react-google-maps": "^4.7.2",
     "react-hot-loader": "^1.3.0",
-    "searchkit": "^0.6.2",
+    "searchkit": "^0.8.3",
     "searchkit-express": "^0.2.1"
   },
   "devDependencies": {

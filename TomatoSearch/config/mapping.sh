@@ -1,7 +1,6 @@
 index="tomato"
-index_type="review"
 user="elasticsearch"
-pass="qwerty123"
+pass="soelynnlovestomatoes"
 url="https://$user:$pass@tomato.ga:9999"
 
 curl -k -XPUT "$url/$index" -d'
@@ -12,8 +11,20 @@ curl -k -XPUT "$url/$index" -d'
   }
 }'
 
-curl -k -XPUT "$url/$index/_mapping/$index_type" -d'
+curl -k -XPUT "$url/$index/_mapping/review" -d'
 {
+  "dynamic_templates": [
+    {
+      "notanalyzed": {
+        "match": "*",
+        "match_mapping_type": "string",
+        "mapping": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  ],
 	"properties": {
 		"review": {
 			"properties": {
@@ -42,6 +53,46 @@ curl -k -XPUT "$url/$index/_mapping/$index_type" -d'
         "movie": {
           "type": "string",
           "index": "not_analyzed"
+				},
+        "lang": {
+          "type": "object",
+          "dynamic": true
+        },
+        "metadata": {
+          "type": "object",
+          "dynamic": true
+        }
+			}
+		}
+	}
+}'
+
+curl -k -XPUT "$url/$index/_mapping/movie" -d'
+{
+  "dynamic_templates": [
+    {
+      "notanalyzed": {
+        "match": "*",
+        "match_mapping_type": "string",
+        "mapping": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  ],
+	"properties": {
+		"movie": {
+			"properties": {
+				"title": {
+          "type": "string",
+          "analyzer": "standard",
+          "fields": {
+            "raw": {
+              "type":  "string",
+              "index": "not_analyzed"
+            }
+          }
 				}
 			}
 		}

@@ -27,6 +27,29 @@ html {
 
 }
 
+.sk-layout__review-app {
+  .sk-hits {
+    flex-flow: column wrap;
+
+    &-hit {
+      display: flex;
+      flex-flow: row nowrap;
+      max-width: 100%;
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.5;
+
+      // &__review {
+      //   max-width: 80%;
+      // }
+
+      // &__poster {
+      //   margin-left: 20px;
+      // }
+    }
+  }
+}
+
 .my-logo {
   color:white;
   flex:0 0 250px;
@@ -46,4 +69,42 @@ html {
   border-radius: 3px;
   color:#08c;
   display:none;
+}
+
+.col-9 {
+  width: 75%;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.col-3 {
+  width: 25%;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.item-block {
+  border-bottom: solid 1px #d9d9d9;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.item-block:last-child {
+  border-bottom: none;
+}
+
+.tomato-top-bar {
+  background-color: #DF3232;
+}
+
+.tomato-logo {
+  // color: #00ff00;
+  font-weight: bold;
+}
+
+.label {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 30px;
 }
