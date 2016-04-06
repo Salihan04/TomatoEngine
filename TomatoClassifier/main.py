@@ -77,7 +77,7 @@ def main(classifier_name,
   classifier = valid_classifiers[classifier_name](**classifier_args)
 
   params = {
-            "tfidf__ngram_range": [(1, 2)],
+            # "tfidf__ngram_range": [(1, 2)],
             # "Classifier__class_weight": [{ 0: 1, 1: 100, 2: 1}, { 0: 1, 1: 1, 2: 1}],
             # "Classifier__C": [.01, .1, 1, 10, 100],
             # "Classifier__kernel": ['rbf', 'linear', 'poly', 'sigmoid'],
@@ -85,11 +85,11 @@ def main(classifier_name,
             # "Classifier__loss" : ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'],
           }
   ml_pipeline = Pipeline([
-                    ('tfidf', TfidfVectorizer(sublinear_tf=True)),
-                    # ('Vectorization', CountVectorizer(binary='true')),
+                    # ('tfidf', TfidfVectorizer(sublinear_tf=True)),
+                    ('Vectorization', CountVectorizer(binary='false')),
                     # ('Feature Refinement', TfidfTransformer(use_idf=False)),
                     # ('Feature Selection', SelectKBest(chi2, 100)),
-                    # ('Feature Reduction', ClassifierOvOFeaturesReduction()),
+                    ('Feature Reduction', ClassifierOvOFeaturesReduction()),
                     ('Classifier', classifier),
                     ])
 
@@ -105,8 +105,8 @@ if __name__ == '__main__':
   # classifier_name = "knn"
   # classifier_args = {}
 
-  # classifier_name = "extratree"
-  # classifier_args = {"n_jobs": -1}
+  classifier_name = "extratree"
+  classifier_args = {"n_jobs": -1}
 
   # classifier_name = "sgd"
   # classifier_args = {} 
@@ -114,8 +114,8 @@ if __name__ == '__main__':
   # classifier_name = "linearsvc"
   # classifier_args = {} #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
 
-  classifier_name = "BernoulliNB"
-  classifier_args = {}
+  # classifier_name = "BernoulliNB"
+  # classifier_args = {}
 
   if 'classifier_name' not in locals() or 'classifier_args' not in locals():
     print('Please uncomment a classifier')
@@ -127,4 +127,4 @@ if __name__ == '__main__':
   print(classifier_args)
   print('=======================================')
 
-  main(classifier_name, classifier_args, preprocessed = False, ngram=2)
+  main(classifier_name, classifier_args, preprocessed = True, ngram=2)

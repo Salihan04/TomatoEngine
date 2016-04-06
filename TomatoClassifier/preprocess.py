@@ -61,13 +61,15 @@ def transform_apostrophe(word, pos_tag):
 def preprocess_word(word, pos_tag, stopword=False, filtered_post_tag=False, lemmatize=True):
   word = word.lower()
   word = transform_apostrophe(word, pos_tag)
+  word = word.replace('.', '')
+  word = word.replace('\'', '')
 
   if len(word) < 1:
     return ""
 
   # Skip if word length is less than 2
   # Skip if it is stopwords
-  if stopword and len(word) < 2 or word in stopwords:
+  if stopword and len(word) <= 2 or word in stopwords:
     return ""
 
   if filtered_post_tag and pos_tag != None and pos_tag in FILTERED_POS_TAG:
@@ -76,10 +78,23 @@ def preprocess_word(word, pos_tag, stopword=False, filtered_post_tag=False, lemm
   if lemmatize and wordnet_pos_code(pos_tag) != "":
     word = lemmatizer.lemmatize(word, wordnet_pos_code(pos_tag))
 
+  if(word == 'w/a'):
+    word = 'with a'
+
+  if(re.search('w/[a-z][a-z]+', word) is not None):
+    word = word.replace('w/', 'without ')
+
+  if(re.search('[a-z]+/[a-z]+', word) is not None):
+    word = word.replace('/', ' or ')
+
+  if word not in english_vocab and word not in stopwords:
+    print(word)
+
   return word
 
 def preprocess(record, stopword=False, filtered_post_tag=False, lemmatize=True):
   review_str = record['review'].decode('UTF-8')
+  review_str = review_str.replace('.', '. ')
 
   tokens = word_tokenize(review_str)
 
@@ -94,7 +109,7 @@ if __name__ == '__main__':
   # Preprocess train data
   records = load_data('data/reviews.tsv')
 
-  preprocess_records = [preprocess(record) for record in records]
+  preprocess_records = [preprocess(record, stopword=True) for record in records]
 
   with open('data/preprocessed_reviews.tsv', 'w') as preprocess_file:
     header = 'id\treview\tsentiment\n'
