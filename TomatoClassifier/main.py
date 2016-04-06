@@ -1,7 +1,8 @@
 from common import load_non_preprocessed_data, load_preprocessed_data
 from classifiers import ClassifierOvOFeaturesReduction
-from gensim.models import Doc2Vec
-from gensim.models.doc2vec import LabeledSentence
+from preprocess_2 import filter_feature_sets
+from nltk.corpus import wordnet
+from nltk.tokenize import word_tokenize
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import ExtraTreesClassifier
@@ -26,7 +27,6 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sknn.mlp import Classifier, Layer
 import nltk
 import numpy
 import os
@@ -41,7 +41,6 @@ valid_classifiers = {
     "gradientboosting": GradientBoostingClassifier,
     "knn": KNeighborsClassifier,
     "linearsvc": LinearSVC,
-    "neuralnetwork": Classifier,
     "randomforest": RandomForestClassifier,
     "sgd": SGDClassifier,
     "svc": SVC,
@@ -65,11 +64,13 @@ def main(classifier_name,
   ###############################
   # Training and testing models #
   ###############################
- 
-  # vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, analyzer='word', 
-  #        stop_words='english', ngram_range=(1, ngram))
-  vectorizer = CountVectorizer(ngram_range=(1, ngram))
+  X = filter_feature_sets(X,y,ngram)
 
+
+
+
+ 
+  
   print()
   print('training classifier')
   if classifier_args is None:

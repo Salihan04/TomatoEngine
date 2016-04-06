@@ -6,7 +6,7 @@ def load_data(file_url):
                 names='id,review,sentiment',
                 delimiter='\t',
                 comments='\\\\',
-                dtype='S36,S1000000,i8')
+                dtype='S36,S10000,i8')
   return records
 
 def load_preprocessed_data():
@@ -15,4 +15,8 @@ def load_preprocessed_data():
 
 def load_non_preprocessed_data():
   records = load_data('data/reviews.tsv')
+  return records['review'], records['sentiment']
+
+def load_preprocessed_2_data():
+  records = load_data('data/preprocessed_2_reviews.tsv')
   return records['review'], records['sentiment']
