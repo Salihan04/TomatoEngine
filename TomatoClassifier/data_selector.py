@@ -3,14 +3,14 @@ from langdetect.lang_detect_exception import LangDetectException
 import json
 
 def convertFromRatingToSentiment(rating):
-  if rating < 25:
-    return 0;
-  elif rating <35:
-    return 1;
-  else:
-    return 2;
+	if rating < 25:
+		return 0;
+	elif rating <35:
+		return 1;
+	else:
+		return 2;
 
-total_class_limit = 750;
+total_class_limit = 334;
 
 negative_count = 0;
 neutral_count = 0;

@@ -78,8 +78,11 @@ def main(classifier_name,
 
   params = {
             "tfidf__ngram_range": [(1, 2)],
-            "Classifier__C": [.01, .1, 1, 10, 100],
-            "Classifier__kernel": ['rbf', 'linear', 'poly', 'sigmoid'],
+            # "Classifier__class_weight": [{ 0: 1, 1: 100, 2: 1}, { 0: 1, 1: 1, 2: 1}],
+            # "Classifier__C": [.01, .1, 1, 10, 100],
+            # "Classifier__kernel": ['rbf', 'linear', 'poly', 'sigmoid'],
+            # "Classifier__penalty": ['l1', 'l2', 'elasticnet'],
+            # "Classifier__loss" : ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'],
           }
   ml_pipeline = Pipeline([
                     ('tfidf', TfidfVectorizer(sublinear_tf=True)),
@@ -106,13 +109,13 @@ if __name__ == '__main__':
   # classifier_args = {"n_jobs": -1}
 
   # classifier_name = "sgd"
-  # classifier_args = {}
+  # classifier_args = {} 
 
-  classifier_name = "svc"
-  classifier_args = {} #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
+  # classifier_name = "linearsvc"
+  # classifier_args = {} #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
 
-  # classifier_name = "BernoulliNB"
-  # classifier_args = {}
+  classifier_name = "BernoulliNB"
+  classifier_args = {}
 
   if 'classifier_name' not in locals() or 'classifier_args' not in locals():
     print('Please uncomment a classifier')
