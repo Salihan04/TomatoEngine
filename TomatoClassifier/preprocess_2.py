@@ -89,10 +89,10 @@ def get_similar_words2(word):
 	else:
 		wordHyponyms = None
 		wordHypernyms = None
-	for s in wordSynsets:
-		tempWord = s.name().split(".")[0]
-		if "_" not in tempWord:
-			word_list.append(tempWord)
+	# for s in wordSynsets:
+	# 	tempWord = s.name().split(".")[0]
+	# 	if "_" not in tempWord:
+	# 		word_list.append(tempWord)
 
 	if wordHyponyms:
 		for s in wordHyponyms:
@@ -147,7 +147,7 @@ def filter_to_feature_unigram(review, feature_key_net):
 		resultString = resultString + " " + token
 	return resultString
 
-def filter_feature_sets(X,ngram = 2, iteration = 10, no_of_features=50):
+def filter_feature_sets(X,ngram = 2, iteration = 10, no_of_features=100):
 	for i in range(0,iteration):
 		print("start of feature_key_net generation .......")
 		
@@ -163,7 +163,8 @@ def filter_feature_sets(X,ngram = 2, iteration = 10, no_of_features=50):
 				count +=1
 
 				newX.append(review)
-		return newX
+		X = newX
+	return X
 
 if __name__ == '__main__':
   # Preprocess train data

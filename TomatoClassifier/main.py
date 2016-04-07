@@ -1,4 +1,4 @@
-from common import load_non_preprocessed_data, load_preprocessed_data
+from common import load_non_preprocessed_data, load_preprocessed_data, load_preprocessed_2_data
 from classifiers import ClassifierOvOFeaturesReduction
 from preprocess_2 import filter_feature_sets
 from nltk.corpus import wordnet
@@ -52,8 +52,12 @@ def main(classifier_name,
          classifier_args=None,
          ngram=2,
          folds=3,
-         preprocessed=False):
-  if preprocessed:
+         preprocessed=False,
+         preprocessed_2=False
+         ):
+  if preprocessed and preprocessed_2:
+    X,y = load_preprocessed_2_data()
+  elif preprocessed:
     X, y = load_preprocessed_data()
   else:
     X, y = load_non_preprocessed_data()
@@ -64,7 +68,6 @@ def main(classifier_name,
   ###############################
   # Training and testing models #
   ###############################
-  X = filter_feature_sets(X,y,ngram)
 
 
 
@@ -128,4 +131,4 @@ if __name__ == '__main__':
   print(classifier_args)
   print('=======================================')
 
-  main(classifier_name, classifier_args, preprocessed = True, ngram=2)
+  main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = False, ngram=2)
