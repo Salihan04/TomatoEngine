@@ -46,6 +46,7 @@ valid_classifiers = {
     "svc": SVC,
     "voting": VotingClassifier,
     "BernoulliNB": BernoulliNB,
+    "GaussianNB": GaussianNB
 }
 
 def main(classifier_name,
@@ -100,7 +101,7 @@ def main(classifier_name,
   gs = GridSearchCV(ml_pipeline, params, cv = folds, verbose=2, n_jobs=-1)
   gs.fit(X, y)
   print(gs.best_params_)
-  print(gs.best_score_)
+  return(gs.best_score_)
 
 if __name__ == '__main__':
   # classifier_name = "decisiontree"
@@ -109,11 +110,11 @@ if __name__ == '__main__':
   # classifier_name = "knn"
   # classifier_args = {}
 
-  classifier_name = "extratree"
-  classifier_args = {"n_jobs": -1}
+  # classifier_name = "extratree"
+  # classifier_args = {"n_jobs": -1}
 
-  # classifier_name = "sgd"
-  # classifier_args = {} 
+  classifier_name = "sgd"
+  classifier_args = {} 
 
   # classifier_name = "linearsvc"
   # classifier_args = {} #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
@@ -121,6 +122,8 @@ if __name__ == '__main__':
   # classifier_name = "BernoulliNB"
   # classifier_args = {}
 
+  # classifier_name = "GaussianNB"
+  # classifier_args = {}
   if 'classifier_name' not in locals() or 'classifier_args' not in locals():
     print('Please uncomment a classifier')
     import sys
@@ -130,5 +133,15 @@ if __name__ == '__main__':
   print(classifier_name)
   print(classifier_args)
   print('=======================================')
+  iteration = 3
+  # preprocessed2Score =0 
+  preprocessedScore =0
+  unpreprocessedScore=0
+  for i in range(iteration):
+    # preprocessed2Score += main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = True, ngram=1)
+    preprocessedScore += main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = False, ngram=2)
+    unpreprocessedScore += main(classifier_name, classifier_args, preprocessed = False, preprocessed_2 = False, ngram=2)
+  # print(preprocessed2Score/iteration)
+  print(preprocessedScore/iteration)
+  print(unpreprocessedScore/iteration)
 
-  main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = False, ngram=2)

@@ -13,6 +13,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_extraction.text import TfidfTransformer
 from sknn.mlp import Classifier, Layer
 from common import load_data
+from bc_prog import bc_prog
 import csv
 import re
 import nltk
@@ -20,6 +21,8 @@ import math
 
 tagger = PerceptronTagger()
 lemmatizer = WordNetLemmatizer()
+basictizer = bc_prog()
+
 stopwords = stopwords.words('english')
 stopwords.remove("but")
 stopwords.remove("not")
@@ -87,8 +90,14 @@ def preprocess_word(word, pos_tag, stopword=False, filtered_post_tag=False, lemm
   if(re.search('[a-z]+/[a-z]+', word) is not None):
     word = word.replace('/', ' or ')
 
-  if word not in english_vocab and word not in stopwords:
-    print(word)
+  # if word not in english_vocab and word not in stopwords:
+  #   print(word)
+  wordbf=  word
+  basicWord = basictizer.check_basic(word)
+  if basicWord:
+    if basicWord != word:
+      print(word + " >> " + basicWord)
+    word = basicWord
 
   return word
 
@@ -97,7 +106,7 @@ def preprocess(record, stopword=False, filtered_post_tag=False, lemmatize=True):
   review_str = review_str.replace('.', '. ')
 
   tokens = word_tokenize(review_str)
-
+  
   preprocessed_string = [preprocess_word(word, pos_tag, stopword, filtered_post_tag, lemmatize)
                          for (word, pos_tag) in nltk.tag._pos_tag(tokens, None, tagger)]
   preprocessed_string = [word for word in preprocessed_string if word != ""]
@@ -116,5 +125,9 @@ if __name__ == '__main__':
     preprocess_file.write(header)
 
     for record in records:
-      preprocess_file.write('%s\t%s\t%i\n' %
+      try:
+        preprocess_file.write('%s\t%s\t%i\n' %
                             (record['id'].decode('UTF-8'), record['review'].decode('UTF-8'), record['sentiment']))
+      except UnicodeEncodeError:
+        print("unicode encode error")
+        continue

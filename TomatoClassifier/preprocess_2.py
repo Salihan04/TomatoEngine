@@ -29,6 +29,7 @@ from sklearn.tree import DecisionTreeClassifier
 import nltk
 import numpy
 import os
+import math
 ########extractFeatures#########
 def generate_feature_key_capture(feature_sets):
 	feature_keys = {}
@@ -83,27 +84,27 @@ def get_similar_words2(word):
 	word_list = []
 
 	wordSynsets = wordnet.synsets(word)
-	if wordSynsets:
-		wordHyponyms = wordSynsets[0].hyponyms()
-		wordHypernyms = wordSynsets[0].hypernyms()
-	else:
-		wordHyponyms = None
-		wordHypernyms = None
-	# for s in wordSynsets:
-	# 	tempWord = s.name().split(".")[0]
-	# 	if "_" not in tempWord:
-	# 		word_list.append(tempWord)
+	# if wordSynsets:
+	# 	wordHyponyms = wordSynsets[0].hyponyms()
+	# 	wordHypernyms = wordSynsets[0].hypernyms()
+	# else:
+	# 	wordHyponyms = None
+	# 	wordHypernyms = None
+	for s in wordSynsets:
+		tempWord = s.name().split(".")[0]
+		if "_" not in tempWord:
+			word_list.append(tempWord)
 
-	if wordHyponyms:
-		for s in wordHyponyms:
-			tempWord = s.name().split(".")[0]
-			if "_" not in tempWord:
-				word_list.append(tempWord)
-	if wordHypernyms:
-		for s in wordHypernyms:
-			tempWord = s.name().split(".")[0]
-			if "_" not in tempWord:
-				word_list.append(tempWord)
+	# if wordHyponyms:
+	# 	for s in wordHyponyms:
+	# 		tempWord = s.name().split(".")[0]
+	# 		if "_" not in tempWord:
+	# 			word_list.append(tempWord)
+	# if wordHypernyms:
+	# 	for s in wordHypernyms:
+	# 		tempWord = s.name().split(".")[0]
+	# 		if "_" not in tempWord:
+	# 			word_list.append(tempWord)
 	word_list = set(word_list)
 	# print(word_list)
 	return word_list
@@ -132,8 +133,13 @@ def filter_to_feature(data, feature_key_net, ngram = 1):
 				resultString = resultString + " " +  feature_key
 			else:
 				resultString = resultString + " " +  tokens[i]
-			if i == len(tokens) - ngram:
-				resultString = resultString + " " + tempString[1:]
+				if i == len(tokens) - ngram:
+					feature_key = get_feature_keys(tempString[1:], feature_key_net)
+					if feature_key != None:
+						resultString = resultString + " " + feature_key
+					else:
+						resultString = resultString + " " + tempString[1:]
+
 		else:
 			resultString = resultString + " " + feature_key
 			skip = ngram - 1
@@ -147,10 +153,11 @@ def filter_to_feature_unigram(review, feature_key_net):
 		resultString = resultString + " " + token
 	return resultString
 
-def filter_feature_sets(X,ngram = 2, iteration = 10, no_of_features=100):
+def filter_feature_sets(X,ngram = 2, iteration = 3, no_of_features=10000):
+	print("start of feature_key_net generation .......")
+
 	for i in range(0,iteration):
-		print("start of feature_key_net generation .......")
-		
+		print("iteration: " + str(i))
 		feature_sets = extract_features_2(X,ngram, no_of_features) 
 		feature_key_net = generate_feature_key_capture(feature_sets)
 		newX = []
@@ -164,6 +171,7 @@ def filter_feature_sets(X,ngram = 2, iteration = 10, no_of_features=100):
 
 				newX.append(review)
 		X = newX
+		no_of_features = int(math.floor(no_of_features*0.9))
 	return X
 
 if __name__ == '__main__':
@@ -172,7 +180,7 @@ if __name__ == '__main__':
   # X = X[0:250]
   # y = y[0:250]
 
-  preprocess_records = filter_feature_sets(X)
+  preprocess_records = filter_feature_sets(X, ngram=2)
 
   with open('data/preprocessed_2_reviews.tsv', 'w') as preprocess_file:
     header = 'review\tsentiment\n'
