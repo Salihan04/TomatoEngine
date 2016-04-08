@@ -21,7 +21,8 @@ import {
   RangeFilter,
   InitialLoader,
   FilteredQuery,
-  TermQuery
+  TermQuery,
+  ItemHistogramList
 } from "searchkit";
 
 import "searchkit/release/theme.css";
@@ -33,11 +34,11 @@ const MovieHitsItem = (props)=> {
   const sentiment = result._source.review.sentiment;
   let sentimentText;
   if (sentiment === 0) {
-    sentimentText = "Not good";
+    sentimentText = "Negative";
   } else if (sentiment === 1) {
     sentimentText = "Neutral";
   } else if (sentiment === 2) {
-    sentimentText = "Good";
+    sentimentText = "Positive";
   }
 
   return (
@@ -76,7 +77,7 @@ export class App extends React.Component<any, any> {
       return query.addQuery(FilteredQuery({
         filter: BoolMust([
           TermQuery("_type", "review"),
-          TermQuery("review.lang.type", "en")
+          TermQuery("review.lang", "en")
         ])
       }));
     })
@@ -96,7 +97,7 @@ export class App extends React.Component<any, any> {
               <div className="tomato-top-bar sk-layout__top-bar sk-top-bar">
                 <div className="sk-top-bar__content">
                   <div className="tomato-logo my-logo">Tomato Reviews</div>
-                  <SearchBox translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["review.review^1","review.title^2"]}/>
+                  <SearchBox translations={{"searchbox.placeholder":"Search reviews"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={true} queryFields={["review.review^1","review.title^2"]}/>
                 </div>
               </div>
 
@@ -104,11 +105,12 @@ export class App extends React.Component<any, any> {
           			<div className="sk-layout__filters">
           				<ResetFilters />
                   <RangeFilter min={0} max={50} field="review.rating" id="rating" title="Original rating" showHistogram={true}/>
-                  <NumericRefinementListFilter id="sentiment" title="Sentiment" field="review.sentiment" options={[
+                  <NumericRefinementListFilter id="sentiment" title="Sentiment" field="review.sentiment"
+                  options={[
                     {title:"All"},
-                    {title:"Good", from:2, to:3},
+                    {title:"Positive", from:2, to:3},
                     {title:"Neutral", from:1, to:2},
-                    {title:"Not good", from:0, to:1}
+                    {title:"Negative", from:0, to:1}
                   ]}/>
                   <RefinementListFilter translations={{"facets.view_more":"View more movies"}} id="movies" title="Movies" field="review.metadata.title" operator="OR" size={10}/>
                   {/*<RefinementListFilter translations={{"facets.view_more":"View more languages"}} id="languages" title="Languages" field="review.lang.type" operator="OR" size={10}/>*/}
@@ -120,7 +122,7 @@ export class App extends React.Component<any, any> {
 
                   <div className="sk-results-list__action-bar sk-action-bar">
 
-                    <div className="sk-action-bar__info">
+                    <div className="sk-action-bar-row">
               				<HitsStats translations={{
                         "hitstats.results_found":"{hitCount} results found"
                       }}/>

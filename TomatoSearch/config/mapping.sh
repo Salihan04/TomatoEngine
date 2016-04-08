@@ -58,8 +58,8 @@ curl -k -XPUT "$url/$index/_mapping/review" -d'
           "index": "not_analyzed"
 				},
         "lang": {
-          "type": "object",
-          "dynamic": true
+          "type": "string",
+          "index": "not_analyzed"
         },
         "metadata": {
           "type": "object",
