@@ -4,7 +4,10 @@ from preprocess_2 import filter_feature_sets
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
 from sklearn.cross_validation import StratifiedKFold
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
 from sklearn.externals import joblib
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -16,22 +19,35 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.multiclass import fit_ovo
+from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 import nltk
 import numpy
 import os
+import csv
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 valid_classifiers = {
+    "adaboosting": AdaBoostClassifier,
+    "decisiontree": DecisionTreeClassifier,
+    "extratree": ExtraTreesClassifier,
+    "gradientboosting": GradientBoostingClassifier,
+    "knn": KNeighborsClassifier,
     "linearsvc": LinearSVC,
+    "randomforest": RandomForestClassifier,
     "sgd": SGDClassifier,
     "svc": SVC,
     "voting": VotingClassifier,
+    "BernoulliNB": BernoulliNB,
+    "GaussianNB": GaussianNB,
 }
 
 def main(classifier_name,
@@ -59,7 +75,7 @@ def main(classifier_name,
   classifier = valid_classifiers[classifier_name](**classifier_args)
 
   params = {
-            "tfidf__ngram_range": [(1, 2)],
+            # "tfidf__ngram_range": [(1, 2)],
             # "Classifier__class_weight": [{ 0: 1, 1: 100, 2: 1}, { 0: 1, 1: 1, 2: 1}],
             # "Classifier__C": [.01, .1, 1, 10, 100],
             # "Classifier__kernel": ['rbf', 'linear', 'poly', 'sigmoid'],
@@ -67,11 +83,11 @@ def main(classifier_name,
             # "Classifier__loss" : ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'],
           }
   ml_pipeline = Pipeline([
-                    ('tfidf', TfidfVectorizer(sublinear_tf=True)),
-                    # ('Vectorization', CountVectorizer(binary='false')),
+                    # ('tfidf', TfidfVectorizer(sublinear_tf=True)),
+                    ('Vectorization', CountVectorizer(binary='false')),
                     # ('Feature Refinement', TfidfTransformer(use_idf=False)),
                     # ('Feature Selection', SelectKBest(chi2, 100)),
-                    # ('Feature Reduction', ClassifierOvOFeaturesReduction()),
+                    ('Feature Reduction', ClassifierOvOFeaturesReduction()),
                     ('Classifier', classifier),
                     ])
 
@@ -83,6 +99,9 @@ def main(classifier_name,
   print(gs.grid_scores_)
 
 if __name__ == '__main__':
+  # classifier_name = "knn"
+  # classifier_args = {}
+
   # classifier_name = "svc"
   # classifier_args = {'C': 1, 'kernel': 'linear'}
 

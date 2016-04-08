@@ -26,7 +26,7 @@ with open('data/tomato_db.json') as data_file:
 
 	for review in reviews:
 		try:
-			if(detect(review["review"]) == 'en' and "rating" in review.keys()):
+			if("rating" in review.keys()):
 				rating = int(review["rating"]);
 				sentiment = convertFromRatingToSentiment(rating);
 
