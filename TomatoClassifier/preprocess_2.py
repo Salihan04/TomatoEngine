@@ -188,4 +188,4 @@ if __name__ == '__main__':
 
     for i in range(len(preprocess_records)):
       preprocess_file.write('\t%s\t%i\n' %
-                            (preprocess_records[i], y[i]))
+                            (preprocess_records[i].decode('UTF-8'), y[i]))
