@@ -42,6 +42,9 @@ curl -k -XPUT "$url/$index/_mapping/review" -d'
 				"rating": {
 					"type": "integer"
 				},
+        "sentiment": {
+          "type": "integer"
+        },
 				"date": {
           "type": "date",
           "format": "MMMM dd, yyyy"

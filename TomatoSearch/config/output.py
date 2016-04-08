@@ -1,7 +1,7 @@
 import json
 from langid import classify
 
-with open('../../TomatoCrawler/tomato_db.json', 'r') as f:
+with open('../../TomatoCrawler/tomato_db_labeled.json', 'r') as f:
     db = json.load(f)
 
 with open('../../TomatoCrawler/metadata_db.json', 'r') as f:

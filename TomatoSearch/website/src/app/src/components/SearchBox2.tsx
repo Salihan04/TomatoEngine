@@ -6,6 +6,7 @@ import {
 } from "searchkit";
 
 import * as axios from "axios";
+import * as _ from "lodash";
 
 const moment = require("moment");
 const jsonp = require("jsonp");
@@ -44,7 +45,7 @@ export class SearchBox2 extends SearchBox {
 		let that = this;
 		this.resolveQuery(query, function(result) {
 			console.log(result);
-			if (result.intent == "Movies") {
+			if (result.intent == "Movies" && !_.isEmpty(result.entities)) {
 				console.log("intent is Movies");
 				// get all filters
 				let filters = that.searchkit.getAccessorsByType(FilterBasedAccessor);
@@ -161,7 +162,11 @@ export class SearchBox2 extends SearchBox {
 					query = "";
 				}
 
-				let shouldResetOtherState = false
+				let shouldResetOtherState = false;
+				that.accessor.setQueryString(query, shouldResetOtherState);
+				that.searchkit.performSearch();
+			} else {
+				let shouldResetOtherState = false;
 				that.accessor.setQueryString(query, shouldResetOtherState);
 				that.searchkit.performSearch();
 			}

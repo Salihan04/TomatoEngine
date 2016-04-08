@@ -27,23 +27,34 @@ import "searchkit/release/theme.css";
 import "./../styles/customisations.scss";
 
 const MovieHitsItem = (props)=> {
-  const {bemBlocks, result} = props
-  let url = "http://www.rottentomatoes.com/m/" + result._source.review.movie
+  const {bemBlocks, result} = props;
+  let url = "http://www.rottentomatoes.com/m/" + result._source.review.movie;
+  const sentiment = result._source.review.sentiment;
+  let sentimentText;
+  if (sentiment === 0) {
+    sentimentText = "Not good";
+  } else if (sentiment === 1) {
+    sentimentText = "Neutral";
+  } else if (sentiment === 2) {
+    sentimentText = "Good";
+  }
+
   return (
     <div className="item-block">
       <div className={bemBlocks.item().mix(bemBlocks.container("item")) } data-qa="hit">
-        <div className="col-3">
+        <div className="col-2" style={{textAlign: 'right'}}>
           <a href={url} target="_blank">
             <img data-qa="poster" className={bemBlocks.item("poster") } src={result._source.review.metadata.poster} width="150" height="220"/>
           </a>
           <div data-qa="movie" className={bemBlocks.item("movie") } dangerouslySetInnerHTML={{ __html: _.get(result, "highlight.review.metadata.title", false) || result._source.review.metadata.title }}>
           </div>
         </div>
+        <div className={`col-1 sentiment sentiment-${sentiment}`}>
+          <span>{sentimentText}</span>
+        </div>
         <div className="col-9">
-          <a href={url} target="_blank">
-            <div data-qa="review" className={bemBlocks.item("review")} dangerouslySetInnerHTML={{__html:_.get(result,"highlight.review.review",false) || result._source.review.review}}>
-            </div>
-          </a>
+          <div data-qa="review" className={bemBlocks.item("review")} dangerouslySetInnerHTML={{__html:_.get(result,"highlight.review.review",false) || result._source.review.review}}>
+          </div>
         </div>
       </div>
     </div>
@@ -115,6 +126,11 @@ export class App extends React.Component<any, any> {
                       <ResetFilters/>
                     </div>
 
+                  </div>
+                  <div className="header">
+                    <div className="col-2">Movie</div>
+                    <div className="col-1">Sentiment</div>
+                    <div className="col-9">Review</div>
                   </div>
                   <Hits hitsPerPage={10} highlightFields={["review.review"]}
                   itemComponent={MovieHitsItem}/>
