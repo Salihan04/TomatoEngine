@@ -29,3 +29,6 @@ class ClassifierOvOFeaturesReduction:
     """
     xs = [clf.decision_function(X).reshape(-1, 1) for clf in self.classifiers]
     return numpy.hstack(xs)
+
+  def get_params(self, deep=False):
+    return {}

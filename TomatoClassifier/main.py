@@ -1,6 +1,5 @@
 from common import load_non_preprocessed_data, load_preprocessed_data, load_preprocessed_2_data
 from classifiers import ClassifierOvOFeaturesReduction
-from preprocess_2 import filter_feature_sets
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
 from sklearn.cross_validation import StratifiedKFold
@@ -53,7 +52,7 @@ valid_classifiers = {
 def main(classifier_name,
          classifier_args=None,
          ngram=2,
-         folds=3,
+         folds=5,
          preprocessed=False
          ):
   if preprocessed:
@@ -79,15 +78,17 @@ def main(classifier_name,
             # "Classifier__class_weight": [{ 0: 1, 1: 100, 2: 1}, { 0: 1, 1: 1, 2: 1}],
             # "Classifier__C": [.01, .1, 1, 10, 100],
             # "Classifier__kernel": ['rbf', 'linear', 'poly', 'sigmoid'],
-            # "Classifier__penalty": ['l1', 'l2', 'elasticnet'],
-            # "Classifier__loss" : ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'],
+            "Classifier__penalty": ['l1', 'l2', 'elasticnet'],
+            "Classifier__loss" : ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'],
+            # "Classifier__n_neighbors": [3, 5, 7, 11],
+            # "Classifier__algorithm": ['auto', 'ball_tree', 'kd_tree', 'brute']
           }
   ml_pipeline = Pipeline([
-                    # ('tfidf', TfidfVectorizer(sublinear_tf=True)),
-                    ('Vectorization', CountVectorizer(binary='false')),
+                    ('tfidf', TfidfVectorizer(sublinear_tf=True, ngram_range=(1,ngram))),
+                    # ('Vectorization', CountVectorizer(binary='false')),
                     # ('Feature Refinement', TfidfTransformer(use_idf=False)),
-                    # ('Feature Selection', SelectKBest(chi2, 100)),
-                    ('Feature Reduction', ClassifierOvOFeaturesReduction()),
+                    # ('Feature Selection', SelectKBest(chi2, 1000)),
+                    # ('Feature Reduction', ClassifierOvOFeaturesReduction()),
                     ('Classifier', classifier),
                     ])
 
@@ -99,6 +100,15 @@ def main(classifier_name,
   print(gs.grid_scores_)
 
 if __name__ == '__main__':
+  # classifier_name = "GaussianNB"
+  # classifier_args = {}
+
+  # classifier_name = "adaboosting"
+  # classifier_args = {}
+
+  # classifier_name = "BernoulliNB"
+  # classifier_args = {}
+
   # classifier_name = "knn"
   # classifier_args = {}
 
@@ -111,17 +121,16 @@ if __name__ == '__main__':
   # classifier_name = "linearsvc"
   # classifier_args = { 'C': 1 } #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
 
-  # classifier_name = "voting"
-  # classifier_args = {
-  #   "estimators": [
-  #       ('sgd', valid_classifiers['sgd'](loss='log', penalty='elasticnet')),
-  #       ('svc', valid_classifiers['svc'](C=10, kernel='linear')),
-  #       ('svc', valid_classifiers['svc'](C=1, kernel='linear')),
-  #       ('svc', valid_classifiers['svc']()),
-  #       ('linearsvc', valid_classifiers['linearsvc'](C=10)),
-  #       ('linearsvc', valid_classifiers['linearsvc'](C=1))
-  #     ]
-  # }
+  classifier_name = "voting"
+  classifier_args = {
+    "estimators": [
+        ('sgd', valid_classifiers['sgd'](loss='log', penalty='elasticnet')),
+        ('BernoulliNB', valid_classifiers['BernoulliNB']()),
+        ('knn', valid_classifiers['knn']()),
+        ('linearsvc', valid_classifiers['linearsvc'](C=0.1)),
+        ('svc', valid_classifiers['svc'](C=1, kernel='linear')),
+      ]
+  }
 
   if 'classifier_name' not in locals() or 'classifier_args' not in locals():
     print('Please uncomment a classifier')

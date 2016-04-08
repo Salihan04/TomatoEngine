@@ -1,23 +1,16 @@
-from common import load_non_preprocessed_data, load_preprocessed_data, load_preprocessed_2_data
-from classifiers import ClassifierOvOFeaturesReduction
-from preprocess_2 import filter_feature_sets
+from common import load_non_preprocessed_data
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
-from sklearn.cross_validation import StratifiedKFold
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import VotingClassifier
 from sklearn.externals import joblib
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import chi2
-from sklearn.linear_model import Perceptron
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.multiclass import fit_ovo
 from sklearn.pipeline import Pipeline
-from sklearn.grid_search import GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import BernoulliNB
 from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
 import nltk
@@ -29,17 +22,19 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 valid_classifiers = {
-    "linearsvc": LinearSVC,
-    "sgd": SGDClassifier,
-    "svc": SVC,
-    "voting": VotingClassifier,
+  "knn": KNeighborsClassifier,
+  "linearsvc": LinearSVC,
+  "sgd": SGDClassifier,
+  "svc": SVC,
+  "voting": VotingClassifier,
+  "BernoulliNB": BernoulliNB,
 }
 
 def main(classifier_name,
          classifier_args=None,
          ngram=2
          ):
-  X, y = load_preprocessed_data()
+  X, y = load_non_preprocessed_data()
 
   ###############################
   # Training and testing models #
@@ -55,6 +50,7 @@ def main(classifier_name,
                     ('tfidf', TfidfVectorizer(sublinear_tf=True, ngram_range=(1,ngram))),
                     ('Classifier', classifier),
                     ])
+
   ml_pipeline.fit(X, y)
   
   print('labeling data')
@@ -70,8 +66,16 @@ def main(classifier_name,
     f.close()
 
 if __name__ == '__main__':
-  classifier_name = "sgd"
-  classifier_args = { 'loss': 'log', 'penalty': 'elasticnet' } 
+  classifier_name = "voting"
+  classifier_args = {
+    "estimators": [
+        ('sgd', valid_classifiers['sgd'](loss='log', penalty='elasticnet')),
+        ('BernoulliNB', valid_classifiers['BernoulliNB']()),
+        ('knn', valid_classifiers['knn']()),
+        ('linearsvc', valid_classifiers['linearsvc'](C=0.1)),
+        ('svc', valid_classifiers['svc'](C=1, kernel='linear')),
+      ]
+  }
 
   if 'classifier_name' not in locals() or 'classifier_args' not in locals():
     print('Please uncomment a classifier')
