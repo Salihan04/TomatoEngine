@@ -61,7 +61,7 @@ def transform_apostrophe(word, pos_tag):
   return word
 
 
-def preprocess_word(word, pos_tag, stopword=False, filtered_post_tag=False, lemmatize=True):
+def preprocess_word(word, pos_tag, stopword=False, filtered_post_tag=False, lemmatize=True, basic_word = False):
   word = word.lower()
   word = transform_apostrophe(word, pos_tag)
   word = word.replace('.', '')
@@ -92,22 +92,23 @@ def preprocess_word(word, pos_tag, stopword=False, filtered_post_tag=False, lemm
 
   # if word not in english_vocab and word not in stopwords:
   #   print(word)
-  wordbf=  word
-  basicWord = basictizer.check_basic(word)
-  if basicWord:
-    if basicWord != word:
-      print(word + " >> " + basicWord)
-    word = basicWord
+  if basic_word:
+    wordbf=  word
+    basicWord = basictizer.check_basic(word)
+    if basicWord:
+      if basicWord != word:
+        print(word + " >> " + basicWord)
+      word = basicWord
 
   return word
 
-def preprocess(record, stopword=False, filtered_post_tag=False, lemmatize=True):
+def preprocess(record, stopword=False, filtered_post_tag=False, basic_word = False, lemmatize=True):
   review_str = record['review'].decode('UTF-8')
   review_str = review_str.replace('.', '. ')
 
   tokens = word_tokenize(review_str)
   
-  preprocessed_string = [preprocess_word(word, pos_tag, stopword, filtered_post_tag, lemmatize)
+  preprocessed_string = [preprocess_word(word, pos_tag, stopword, filtered_post_tag, lemmatize, basic_word)
                          for (word, pos_tag) in nltk.tag._pos_tag(tokens, None, tagger)]
   preprocessed_string = [word for word in preprocessed_string if word != ""]
 
@@ -118,7 +119,7 @@ if __name__ == '__main__':
   # Preprocess train data
   records = load_data('data/reviews.tsv')
 
-  preprocess_records = [preprocess(record, stopword=True) for record in records]
+  preprocess_records = [preprocess(record, stopword=True, basic_word = False) for record in records]
 
   with open('data/preprocessed_reviews.tsv', 'w') as preprocess_file:
     header = 'id\treview\tsentiment\n'

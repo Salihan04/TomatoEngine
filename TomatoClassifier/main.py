@@ -104,17 +104,17 @@ def main(classifier_name,
   return(gs.best_score_)
 
 if __name__ == '__main__':
-  # classifier_name = "decisiontree"
-  # classifier_args = {"max_depth": 10}
+  classifier_name = "decisiontree"
+  classifier_args = {"max_depth": 10}
 
   # classifier_name = "knn"
   # classifier_args = {}
-
+    
   # classifier_name = "extratree"
   # classifier_args = {"n_jobs": -1}
 
-  classifier_name = "sgd"
-  classifier_args = {} 
+  # classifier_name = "sgd"
+  # classifier_args = {} 
 
   # classifier_name = "linearsvc"
   # classifier_args = {} #{ "class_weight": { 0: 1, 1: 100, 2: 1} }
@@ -133,15 +133,15 @@ if __name__ == '__main__':
   print(classifier_name)
   print(classifier_args)
   print('=======================================')
-  iteration = 3
-  # preprocessed2Score =0 
+  iteration = 5
+  preprocessed2Score =0 
   preprocessedScore =0
   unpreprocessedScore=0
   for i in range(iteration):
-    # preprocessed2Score += main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = True, ngram=1)
+    preprocessed2Score += main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = True, ngram=1)
     preprocessedScore += main(classifier_name, classifier_args, preprocessed = True, preprocessed_2 = False, ngram=2)
     unpreprocessedScore += main(classifier_name, classifier_args, preprocessed = False, preprocessed_2 = False, ngram=2)
-  # print(preprocessed2Score/iteration)
+  print(preprocessed2Score/iteration)
   print(preprocessedScore/iteration)
   print(unpreprocessedScore/iteration)
 
