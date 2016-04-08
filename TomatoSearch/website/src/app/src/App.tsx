@@ -2,6 +2,7 @@ import * as React from "react";
 import * as _ from "lodash";
 
 import {
+  BoolMust,
   SearchBox,
   Hits,
   HitsStats,
@@ -73,7 +74,10 @@ export class App extends React.Component<any, any> {
     })
     this.searchkit.addDefaultQuery((query) => {
       return query.addQuery(FilteredQuery({
-        filter: TermQuery("_type", "review")
+        filter: BoolMust([
+          TermQuery("_type", "review"),
+          TermQuery("review.lang.type", "en")
+        ])
       }));
     })
     this.searchkit.translateFunction = (key)=> {
@@ -99,9 +103,15 @@ export class App extends React.Component<any, any> {
               <div className="sk-layout__body">
           			<div className="sk-layout__filters">
           				<ResetFilters />
-                  <RangeFilter min={0} max={50} field="review.rating" id="rating" title="Metascore" showHistogram={true}/>
+                  <RangeFilter min={0} max={50} field="review.rating" id="rating" title="Original rating" showHistogram={true}/>
+                  <NumericRefinementListFilter id="sentiment" title="Sentiment" field="review.sentiment" options={[
+                    {title:"All"},
+                    {title:"Good", from:2, to:3},
+                    {title:"Neutral", from:1, to:2},
+                    {title:"Not good", from:0, to:1}
+                  ]}/>
                   <RefinementListFilter translations={{"facets.view_more":"View more movies"}} id="movies" title="Movies" field="review.metadata.title" operator="OR" size={10}/>
-                  <RefinementListFilter translations={{"facets.view_more":"View more languages"}} id="languages" title="Languages" field="review.lang.type" operator="OR" size={10}/>
+                  {/*<RefinementListFilter translations={{"facets.view_more":"View more languages"}} id="languages" title="Languages" field="review.lang.type" operator="OR" size={10}/>*/}
                 </div>
 
                 <div className="sk-layout__results sk-results-list">
