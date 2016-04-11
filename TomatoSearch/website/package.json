@@ -22,6 +22,7 @@
     "ejs": "^2.3.4",
     "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
+    "highcharts": "^4.2.3",
     "history": "^1.17.0",
     "jsonp": "^0.2.0",
     "lodash": "^4.5.0",

@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
+import { Link } from 'react-router'
 
 import {
   BoolMust,
@@ -118,7 +119,11 @@ export class App extends React.Component<any, any> {
 
                 <div className="sk-layout__results sk-results-list">
 
-                  <div className="label">Reviews</div>
+                  <div className="body-header">
+                    <Link className="link" to="/movie">Movies</Link>
+                    <span className="label">Reviews</span>
+                    <Link className="link" to="/stats">Statistics</Link>
+                  </div>
 
                   <div className="sk-results-list__action-bar sk-action-bar">
 

@@ -40,6 +40,21 @@ $ python3 label_data.py
 ```
 
 ## TomatoSearch
+There are two folders `config` and `website` which are contains the code for indexing and the website respectively.
+The instructions can be found as follows:
+- [Indexing](/TomatoSearch/config/README.md)
+- [Website](/TomatoSearch/website/README.MD)
 
 ## OkTomato
+This folder is mainly used to download the entities from Elasticsearch and upload them to Wit.ai.
 
+In the `OkTomato` directory:
+- To download the entities, run
+```Shell
+$ python data/populate_data.py
+```
+
+- To upload to Wit.ai, run
+```Shell
+$ python upload_entities.py
+```
