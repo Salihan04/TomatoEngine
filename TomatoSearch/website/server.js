@@ -72,7 +72,6 @@ module.exports = {
       host, index:"taxonomynested"
     }))
 
-
     app.get('*', function(req, res) {
       res.render('index');
     });
