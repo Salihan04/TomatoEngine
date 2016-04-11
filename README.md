@@ -43,7 +43,7 @@ $ python3 label_data.py
 There are two folders `config` and `website` which are contains the code for indexing and the website respectively.
 The instructions can be found as follows:
 - [Indexing](/TomatoSearch/config/README.md)
-- [Website](/TomatoSearch/website/README.md)
+- [Website](/TomatoSearch/website/README.MD)
 
 ## OkTomato
 This folder is mainly used to download the entities from Elasticsearch and upload them to Wit.ai.
