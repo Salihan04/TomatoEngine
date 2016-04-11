@@ -40,6 +40,10 @@ $ python3 label_data.py
 ```
 
 ## TomatoSearch
+There are two folders `config` and `website` which are contains the code for indexing and the website respectively.
+The instructions can be found as follows:
+- [Indexing](/TomatoSearch/config/README.md)
+- [Website](/TomatoSearch/website/README.md)
 
 ## OkTomato
 
