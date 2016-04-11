@@ -17,6 +17,7 @@ import nltk
 import numpy
 import os
 import json
+import time
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -57,13 +58,18 @@ def main(classifier_name,
   with open('data/tomato_db.json') as data_file:
     data = json.load(data_file);    
     reviews = data["reviews"];
+    total_time = 0;
 
     for review in reviews:
+      start_time = time.clock();
       review['sentiment'] = numpy.asscalar(ml_pipeline.predict([review['review']])[0])
+      total_time += time.clock() - start_time;
 
     f = open('data/tomato_db_labeled.json', 'w', encoding='UTF-8')
     f.write(json.dumps(data, indent = 4))
     f.close()
+
+    print("Time taken per record: %f" % (total_time / len(reviews)));
 
 if __name__ == '__main__':
   classifier_name = "voting"
