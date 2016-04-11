@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
+import { Link } from 'react-router'
 
 import {
   SearchBox,
@@ -91,8 +92,11 @@ export class MovieApp extends React.Component<any, any> {
                 </div>
 
                 <div className="sk-layout__results sk-results-list">
-
-                  <div className="label">Movies</div>
+                  <div className="body-header">
+                    <Link className="link" to="/stats">Statistics</Link>
+                    <span className="label">Movies</span>
+                    <Link className="link" to="/review">Reviews</Link>
+                  </div>
 
                   <div className="sk-results-list__action-bar sk-action-bar">
 
