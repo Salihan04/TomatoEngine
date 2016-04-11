@@ -6,12 +6,36 @@ import {
 } from "searchkit";
 
 import * as axios from "axios";
+import * as _ from "lodash";
 
 const moment = require("moment");
 const jsonp = require("jsonp");
 import SpeechRecognition from "./SpeechRecognition";
 
 export class SearchBox2 extends SearchBox {
+
+	constructor(props) {
+		super(props);
+		this.state = _.extend(this.state, {
+			recognizing: false
+		});
+	}
+
+	toggleSpeech() {
+		if (!SpeechRecognition.recognizing) {
+			SpeechRecognition.startRecognize();
+			this.setState({
+				recognizing: true
+			});
+			this.setFocusState(true);
+			
+		} else {
+			this.setState({
+				recognizing: false
+			});
+			this.setFocusState(false);
+		}
+	}
 
 	componentDidMount() {
 		SpeechRecognition.initialize(this.setValue.bind(this), this.submit.bind(this));
@@ -41,10 +65,17 @@ export class SearchBox2 extends SearchBox {
 	}
 
 	searchQuery(query) {
+		if (!SpeechRecognition.recognizing) {
+			this.setState({
+				recognizing: false
+			});
+			this.setFocusState(false);
+		}
+
 		let that = this;
 		this.resolveQuery(query, function(result) {
 			console.log(result);
-			if (result.intent == "Movies") {
+			if (result.intent == "Movies" && !_.isEmpty(result.entities)) {
 				console.log("intent is Movies");
 				// get all filters
 				let filters = that.searchkit.getAccessorsByType(FilterBasedAccessor);
@@ -161,7 +192,11 @@ export class SearchBox2 extends SearchBox {
 					query = "";
 				}
 
-				let shouldResetOtherState = false
+				let shouldResetOtherState = false;
+				that.accessor.setQueryString(query, shouldResetOtherState);
+				that.searchkit.performSearch();
+			} else {
+				let shouldResetOtherState = false;
 				that.accessor.setQueryString(query, shouldResetOtherState);
 				that.searchkit.performSearch();
 			}
@@ -174,5 +209,36 @@ export class SearchBox2 extends SearchBox {
 		this.lastSearchMs = now
 		this.searchkit.performSearch(newSearch)
 	 */
+	}
+
+	render() {
+		// console.log(this.props);
+		// return super.render();
+		let block = this.bemBlocks.container;
+		let recognizing = this.state.recognizing || SpeechRecognition.recognizing;
+		let speechIcon = recognizing ? "settings_voice" : "keyboard_voice";
+		let speechClass = recognizing ? "speech-recognizing" : "speech";
+
+		return (
+			<div className={block().state({focused:this.state.focused})}>
+			<form onSubmit={this.onSubmit.bind(this)}>
+				<div className={block("icon")}></div>
+				<input type="text"
+				data-qa="query"
+				className={block("text")}
+				placeholder={this.props.placeholder || this.translate("searchbox.placeholder")}
+				value={this.getValue()}
+				onFocus={this.setFocusState.bind(this, true)}
+				onBlur={this.setFocusState.bind(this, false)}
+				ref="queryField"
+				autoFocus={this.props.autofocus}
+				onInput={this.onChange.bind(this)}/>
+				<input type="submit" value="search" className={block("action")} data-qa="submit"/>
+				<div data-qa="loader" className={block("loader").mix("sk-spinning-loader").state({hidden:!this.isLoading()})}></div>
+              	<i className={`material-icons speech-icon ${speechClass}`} onClick={this.toggleSpeech.bind(this)}>{speechIcon}</i>
+			</form>
+			</div>
+		);
+
 	}
 }

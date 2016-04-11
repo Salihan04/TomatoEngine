@@ -75,7 +75,7 @@ export class MovieApp extends React.Component<any, any> {
               <div className="tomato-top-bar sk-layout__top-bar sk-top-bar">
                 <div className="sk-top-bar__content">
                   <div className="tomato-logo my-logo">Tomato Movies</div>
-                  <SearchBox2 translations={{"searchbox.placeholder":"search movies"}} queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={false} queryFields={["movie.title^1"]}/>
+                  <SearchBox2 placeholder="Search movies" queryOptions={{"minimum_should_match":"70%"}} autofocus={true} searchOnChange={false} queryFields={["movie.title^1"]}/>
                 </div>
               </div>
 
@@ -96,7 +96,7 @@ export class MovieApp extends React.Component<any, any> {
 
                   <div className="sk-results-list__action-bar sk-action-bar">
 
-                    <div className="sk-action-bar__info">
+                    <div className="sk-action-bar-row">
               				<HitsStats translations={{
                         "hitstats.results_found":"{hitCount} results found"
                       }}/>
