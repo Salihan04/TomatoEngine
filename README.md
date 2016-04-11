@@ -46,4 +46,15 @@ The instructions can be found as follows:
 - [Website](/TomatoSearch/website/README.md)
 
 ## OkTomato
+This folder is mainly used to download the entities from Elasticsearch and upload them to Wit.ai.
 
+In the `OkTomato` directory:
+- To download the entities, run
+```Shell
+$ python data/populate_data.py
+```
+
+- To upload to Wit.ai, run
+```Shell
+$ python upload_entities.py
+```
