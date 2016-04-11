@@ -73,14 +73,33 @@ html {
 
 .col-9 {
   width: 75%;
+  max-width: 75%;
   margin-right: 30px;
   margin-left: 30px;
 }
 
 .col-3 {
   width: 25%;
+  min-width: 25%;
   margin-right: 30px;
   margin-left: 30px;
+  text-align: center;
+}
+
+.col-2 {
+  width: 16.67%;
+  min-width: 16.67%;
+  margin-right: 30px;
+  margin-left: 30px;
+  text-align: center;
+}
+
+.col-1 {
+  width: 8.33%;
+  min-width: 8.33%;
+  margin-right: 30px;
+  margin-left: 30px;
+  text-align: center;
 }
 
 .item-block {
@@ -107,4 +126,48 @@ html {
   margin-bottom: 30px;
   text-align: center;
   font-size: 30px;
+}
+
+.sentiment {
+  font-weight: 600;
+  font-size: 20px;
+
+  &-0 {
+    color: red;
+  }
+
+  &-1 {
+    color: #A2A2A2;
+  }
+
+  &-2 {
+    color: #00B900;
+  }
+}
+
+.header {
+  font-size: 20px;
+  display: flex;
+  text-align: center;
+}
+
+.sk-hits-hit__movie {
+  display: flex;
+  justify-content: center;
+  font-size: 12pt;
+  text-align: center;
+}
+
+.speech-icon {
+  margin: 8px 10px 0 15px;
+  cursor: pointer;
+}
+
+.speech {
+  opacity: 0.5;
+  color: #000;
+
+  &-recognizing {
+    opacity: 0.7;
+  }
 }

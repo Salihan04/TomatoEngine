@@ -20,7 +20,6 @@ export default class SpeechRecognition {
     this.inputOnChange = inputOnChange;
     this.inputOnSubmit = inputOnSubmit;
     this.load();
-    this.startButton(null);
   }
 
   static load() {
@@ -30,7 +29,7 @@ export default class SpeechRecognition {
       console.log('Speech API found!');
       // start_button.style.display = 'inline-block';
       this.recognition = new window['webkitSpeechRecognition']();
-      this.recognition.continuous = true;
+      this.recognition.continuous = false;
       this.recognition.interimResults = true;
       this.recognition.onstart = () => {
         this.recognizing = true;
@@ -111,6 +110,8 @@ export default class SpeechRecognition {
     if (this.final_transcript !== '') {
       this.inputOnSubmit(this.final_transcript);
       this.final_transcript = '';
+      this.stopRecognize();
+      console.log(this.recognizing);
     }
   }
 
@@ -127,10 +128,22 @@ export default class SpeechRecognition {
       // document.getElementsByClassName('sk-search-box__text')[0].value = 
         // interim_transcript + ' ' + this.final_transcript;
     // }
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
     this.timer = setTimeout(this.submitQuery.bind(this), this.timeout_limit);
   }
 
-  static startButton(event) {
+  static stopRecognize() {
+    this.recognition.stop();
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
+
+  static startRecognize() {
     if (this.recognizing) {
       this.recognition.stop();
       return;
